@@ -1,0 +1,40 @@
+
+
+import pandas as pd
+import numpy as np
+import yfinance as yf
+import matplotlib.pyplot as plt
+
+# Fetch Airbnb data from Yahoo Finance for 10 years
+df = yf.download("ABNB", start="2013-08-01", end="2023-08-01")
+
+# Calculate daily returns and annualized volatility
+df['Returns'] = df['Close'].pct_change()
+df['Volatility'] = df['Returns'].rolling(window=252).std() * np.sqrt(252)
+
+# Plot the Airbnb prices
+plt.figure(figsize=(14, 10))
+
+plt.subplot(3, 1, 1)
+plt.plot(df.index, df['Close'], label='Airbnb Prices', color='blue')
+plt.title('Airbnb Stock Prices')
+plt.ylabel('Price')
+plt.legend()
+
+# Plot the Airbnb returns
+plt.subplot(3, 1, 2)
+plt.plot(df.index, df['Returns'], label='Airbnb Returns', color='green')
+plt.title('Airbnb Daily Returns')
+plt.ylabel('Returns')
+plt.legend()
+
+# Plot the annualized volatility
+plt.subplot(3, 1, 3)
+plt.plot(df.index, df['Volatility'], label='Airbnb Annualized Volatility', color='red')
+plt.title('Airbnb Annualized Volatility')
+plt.ylabel('Annualized Volatility')
+plt.xlabel('Year')
+plt.legend()
+
+plt.tight_layout()
+plt.show()
